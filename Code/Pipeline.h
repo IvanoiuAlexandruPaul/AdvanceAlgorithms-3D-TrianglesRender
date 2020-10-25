@@ -4,8 +4,11 @@
 template <typename target_t>
 class Pipeline {
     private: 
-        WorldTransform wt_;
-        ViewTransform vt_;
+
+        //Ignora, non necessario nella prima parte 
+        ModelTransform vt_;
+
+
         ProjectionTransform pt_;
         ScreenMapping sm_;
         Clipper cl_;
@@ -42,11 +45,47 @@ class TrianglesTransform {
         std::vector<Triangle> apply(std::vector<Triangle> triangles);
 };
 
-class WorldTransform : TrianglesTransform {
+class ModelTransform : TrianglesTransform {
 
-};
+    public: 
+        std::vector<Triangle> Identity(std::vector<Triangle> triangles, Vertex vector) {
+	        Matrix result;
+	        result.m[0] = 1.0f;
+	        result.m[5] = 1.0f;
+	        result.m[10] = 1.0f;
+	        result.m[15] = 1.0f;
+	        return result;
+        }
 
-class ViewTransform : TrianglesTransform {
+         std::vector<Triangle> Translation(std::vector<Triangle> triangles, Vertex vector){
+                Matrix result = Matrix::Identity();
+                result.m[12] = x;
+                result.m[13] = y;
+                result.m[14] = z;
+                return result;
+         }
+
+         std::vector<Triangle> Rotation(std::vector<Triangle> triangles, double theta){
+                Matrix result;
+                result.m[0] = 1.0f;
+                result.m[5] = cos(theta);
+                result.m[9] = -sin(theta);
+                result.m[6] = sin(theta);
+                result.m[10] = cos(theta);
+                result.m[15] = 1.0f;
+                return result;              
+         }
+         
+         std::vector<Triangle> Scale(std::vector<Triangle> trinagles, Vertex vector){
+                Matrix result;
+                result.m[0] = x;
+                result.m[5] = y;
+                result.m[10] = z;
+                result.m[15] = 1.0f;
+                return result;
+         }
+
+    private:
 
 };
 
@@ -55,16 +94,17 @@ class ProjectionTransform : TrianglesTransform {
 };
 
 class Clipper{
-
+    friend Matrix;
     Matrix Perspective1(float left, float right, float top, float bottom, float near, float far) {
         Matrix result;
-        result.m[0] = 2.0f * near / (right - left);
-        result.m[8] = (right + left) / (right - left);
-        result.m[5] = 2.0f * near / (top - bottom);
-        result.m[9] = (top + bottom) / (top - bottom);
-        result.m[10] = -(far + near) / (far - near);
-        result.m[14] = -2.0f * far * near / (far - near);
-        result.m[11] = -1.0f;
+        result[0] = 2.0f * near / (right - left);
+        result[8] = (right + left) / (right - left);
+        result[5] = 2.0f * near / (top - bottom);
+        result[9] = (top + bottom) / (top - bottom);
+        result[10] = -(far + near) / (far - near);
+        result[14] = -2.0f * far * near / (far - near);
+        result[11] = -1.0f;
+        Matrix->mat_[1];
         //result.m[15] = 1.0f;
         return result;
     };
@@ -117,3 +157,4 @@ class RasterSubsystem {
         return  z_bufferize(buffers, clipped);
     };
 };
+
