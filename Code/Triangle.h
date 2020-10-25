@@ -1,4 +1,4 @@
-#include <xmatrix.h>
+#include <Matrix.h>
 
 class Triangle {
 
@@ -13,4 +13,4 @@ class Triangle {
         Vertex a_uv;
         Vertex b_uv;
         Vertex c_uv;
-}
+};
