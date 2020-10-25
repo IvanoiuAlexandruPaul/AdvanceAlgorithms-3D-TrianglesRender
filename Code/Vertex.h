@@ -1,7 +1,8 @@
-#include<vector>
+#include <vector>
 
 class Vertex {
     // TODO implement vector
+    public:
         Vertex(double x, double y, double z, double w){
             this->x_=x;
             this->y_=y;
