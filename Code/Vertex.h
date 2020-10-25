@@ -1,4 +1,4 @@
-#include<vector.h>
+#include <vector>
 
 class Vertex {
     // TODO implement vector
@@ -11,4 +11,4 @@ class Vertex {
         }
     private:
         double x_, y_, z_, w_;
-}
+};
