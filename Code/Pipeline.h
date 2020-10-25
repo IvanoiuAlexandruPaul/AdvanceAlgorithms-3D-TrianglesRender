@@ -1,5 +1,5 @@
 #include <vector>
-#include <Triangle>
+#include <Triangle.h>
 
 template <typename target_t>
 class Pipeline {
@@ -38,7 +38,8 @@ std::vector<Triangle> applyAll(std::vector<TrianglesTransform> transforms) {
 };
 
 class TrianglesTransform {
-    std::vector<Triangle> apply(std::vector<Triangle> triangles);
+    public:
+        std::vector<Triangle> apply(std::vector<Triangle> triangles);
 };
 
 class WorldTransform : TrianglesTransform {
