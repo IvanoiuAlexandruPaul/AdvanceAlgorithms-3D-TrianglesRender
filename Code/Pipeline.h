@@ -1,4 +1,5 @@
 #include <vector>
+#include <Triangle>
 
 template <typename target_t>
 class Pipeline {
@@ -8,7 +9,6 @@ class Pipeline {
         ProjectionTransform pt_;
         ScreenMapping sm_;
         Clipper cl_;
-
         RasterSubsystem<target_t> rs_;
     
     target_t render(Type primitives) { // Understand what type
@@ -29,27 +29,27 @@ class Window {
         void show(target_t target);
 };
 
-Type applyAll(std::vector<Transform> transforms) {
-    Type a;
-    for (Transform t : transforms) { // TODO verify
+std::vector<Triangle> applyAll(std::vector<TrianglesTransform> transforms) {
+    std::vector<Triangle> a;
+    for (TrianglesTransform t : transforms) { // TODO verify
         a = t.apply(a);
     }
     return a;
 };
 
-class Transform {
-    Type apply(Type);
+class TrianglesTransform {
+    std::vector<Triangle> apply(std::vector<Triangle> triangles);
 };
 
-class WorldTransform : Transform {
-
-};
-
-class ViewTransform : Transform {
+class WorldTransform : TrianglesTransform {
 
 };
 
-class ProjectionTransform : Transform {
+class ViewTransform : TrianglesTransform {
+
+};
+
+class ProjectionTransform : TrianglesTransform {
 
 };
 
