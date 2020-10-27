@@ -26,12 +26,6 @@ class Pipeline {
     }
 };
 
-template<typename target_t>
-class Window {
-    public:
-        void show(target_t target);
-};
-
 std::vector<Triangle> applyAll(std::vector<TrianglesTransform> transforms) {
     std::vector<Triangle> a;
     for (TrianglesTransform t : transforms) { // TODO verify
@@ -49,77 +43,75 @@ class ModelTransform : TrianglesTransform {
 
     public: 
         std::vector<Triangle> Identity(std::vector<Triangle> triangles, Vertex vector) {
-	        Matrix result;
-	        result.m[0] = 1.0f;
-	        result.m[5] = 1.0f;
-	        result.m[10] = 1.0f;
-	        result.m[15] = 1.0f;
-	        return result;
+	    
         }
 
-         std::vector<Triangle> Translation(std::vector<Triangle> triangles, Vertex vector){
-                Matrix result = Matrix::Identity();
-                result.m[12] = x;
-                result.m[13] = y;
-                result.m[14] = z;
-                return result;
-         }
+        std::vector<Triangle> Translation(std::vector<Triangle> triangles, Vertex vector){
+            std::vector<Triangle> new_triangles; 
+            for(Triangle t:triangles){
+                std::vector<Vertex> nv; 
+                
+                for(Vertex v: t.get_vertex()){
+                    Matrix mt = Matrix(4, 4, 
+                        {{1,0,0, vector.get_x()},
+                         {0,1,0, vector.get_y()},
+                         {0,0,1, vector.get_z()},
+                         {0,0,0, vector.get_w()}
+                         });
+                    Matrix vc = Matrix(4,1,{{v.get_x()},{v.get_y()},{v.get_z()},{v.get_w()}});
+                    Matrix nc = mt.product(mt,vc); 
+                    nv.push_back({nc(0,0),nc(1,0),nc(2,0)}); 
+                }
+                new_triangles.push_back({nv.at(0),nv.at(1),nv.at(2)}); 
+            }
+            return new_triangles;
+        }
 
-         std::vector<Triangle> Rotation(std::vector<Triangle> triangles, double theta){
-                Matrix result;
-                result.m[0] = 1.0f;
-                result.m[5] = cos(theta);
-                result.m[9] = -sin(theta);
-                result.m[6] = sin(theta);
-                result.m[10] = cos(theta);
-                result.m[15] = 1.0f;
-                return result;              
-         }
+
+        std::vector<Triangle> Rotation(std::vector<Triangle> triangles, double theta){
          
-         std::vector<Triangle> Scale(std::vector<Triangle> trinagles, Vertex vector){
-                Matrix result;
-                result.m[0] = x;
-                result.m[5] = y;
-                result.m[10] = z;
-                result.m[15] = 1.0f;
-                return result;
-         }
-
-    private:
-
-};
+        std::vector<Triangle> Scale(std::vector<Triangle> trinagles, Vertex vector){
+            
+        }
 
 class ProjectionTransform : TrianglesTransform {
 
 };
 
-class Clipper{
-    friend Matrix;
+class Clipper {
+    //Perspective1(-1,1,1,-1,0.1f,100.0f);
     Matrix Perspective1(float left, float right, float top, float bottom, float near, float far) {
-        Matrix result;
-        result[0] = 2.0f * near / (right - left);
-        result[8] = (right + left) / (right - left);
-        result[5] = 2.0f * near / (top - bottom);
-        result[9] = (top + bottom) / (top - bottom);
-        result[10] = -(far + near) / (far - near);
-        result[14] = -2.0f * far * near / (far - near);
-        result[11] = -1.0f;
-        Matrix->mat_[1];
-        //result.m[15] = 1.0f;
-        return result;
+        std::vector<std::vector<double>> result(
+            4,
+            std::vector<double>(4, 0)
+        );
+        result[0][0] = 2.0f * near / (right - left);
+        result[0][3] = (right + left) / (right - left);
+        result[1][1] = 2.0f * near / (top - bottom);
+        result[1][2] = (top + bottom) / (top - bottom);
+        result[1][3] = -(far + near) / (far - near);
+        result[2][3] = -2.0f * far * near / (far - near);
+        result[2][3] = -1.0f;
+        //result[15] = 1.0f;
+        return Matrix(4, 4, result);
     };
 
     Matrix Perspectiv1(float fov, float aspect, float near, float far) {
         float f = 1.0f / tan(fov / 2.0f);
-        Matrix result;
-        result.m[0] = f / aspect;
-        result.m[5] = f;
-        result.m[10] = (far + near) / (near - far);
-        result.m[14] = 2 * far*near / (near - far);
-        result.m[11] = -1.0f;
-        return result;
+        std::vector<std::vector<double>> result (
+            4,
+            std::vector<double>(4, 0)
+        );
+        result[0][0] = f / aspect;
+        result[1][1] = f;
+        result[2][2] = (far + near) / (near - far);
+        result[3][3] = 2 * far*near / (near - far);
+        result[3][2] = -1.0f;
+        return Matrix(4, 4, result);
     };
 };
+
+
 
 class ScreenMapping {
 
@@ -132,14 +124,14 @@ class ScreenMapping {
 
 template <typename target_t>
 class RasterSubsystem {
-    int buffer_width, buffer_height;
+    protected:
+        int buffer_width, buffer_height;
 
-    target_t createEmptyBuffer();
+    virtual target_t createEmptyBuffer();
 
-    target_t z_bufferize(std::vector<target_t> buffers, std::vector<Primitive> primitives); // TODO define primitives primitives in signatures.
+    virtual target_t z_bufferize(std::vector<target_t> buffers, std::vector<Triangle> primitives);
 
-    target_t rasterize(ClippedType clipped, ScreenMapping sm) {
-
+    virtual target_t rasterize(ClippedType clipped, ScreenMapping sm) {
         target_t buffer = createEmptyBuffer();
         std::vector<target_t> buffers;
         for(auto& primitive : clipped) {
@@ -158,3 +150,26 @@ class RasterSubsystem {
     };
 };
 
+class CharRasterSubsystem : RasterSubsystem<char*> {
+    char* createEmptyBuffer() {
+        char* buffer =  new char[buffer_width * buffer_height];
+        for (int row = 0; row < buffer_height; row++) {
+            for (int col = 0; col < buffer_width; col++)
+                buffer[row * buffer_width + col] = '.'; 
+        }
+        return buffer;
+    }
+
+    char* z_bufferize(std::vector<char*> buffers, std::vector<Triangle> primitives) {
+
+    }
+};
+
+void printBuffer(char * buffer, int buffer_width, int buffer_height) {
+    for (int row = 0; row < buffer_height; row++) {
+        for (int col = 0; col < buffer_width; col++) {
+            std::cout << buffer[row * buffer_width + col];
+        }
+        std::cout << std::endl;
+    }
+}
