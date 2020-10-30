@@ -4,6 +4,10 @@ class Vertex {
     // TODO implement vector
     public: 
 
+        Vertex(){
+            Vertex(0,0,0,1);
+        }
+
         Vertex(double x, double y, double z){
             Vertex(x,y,z,1);
         }
