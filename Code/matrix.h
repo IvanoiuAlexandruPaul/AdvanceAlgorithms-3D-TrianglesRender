@@ -1,14 +1,13 @@
 #include <vector>
-#include <Vertex.h>
-#include <vector>
 #include <iostream>
+#include "Vertex.h"
 
 
 class Matrix{
     // TODO implement matrix
     public: 
 
-        Matrix(int rows, int cols, std::vector<std::vector<double>> mat){
+        Matrix(int rows, int cols, std::vector<std::vector<double> > mat){
             this->rows_ = rows;
             this->cols_ = cols;
             this->mat_  = mat;
@@ -29,7 +28,7 @@ class Matrix{
         Matrix product(Matrix a, Matrix b);
         Matrix sum(Matrix a, Matrix b);
 
-        double Matrix::operator()(int row, int col) const {
+        double operator()(int row, int col) const {
             // controllo row, col vanno bene
             try{
                 if(row >= 0 && row <= rows_ && col >= 0 && col <= cols_)
@@ -42,7 +41,7 @@ class Matrix{
             }
         }
 
-        double& Matrix::operator()(int row, int col) {
+        double& operator()(int row, int col) {
             // controllo row, col vanno bene
             try{
                 if(row >= 0 && row <= rows_ && col >= 0 && col <= cols_)
@@ -55,7 +54,7 @@ class Matrix{
             }
         }
 
-        double Matrix::operator[](int i){
+        double operator[](int i){
             if(i>=0 && i <= 3)
                 return mat_[i][0];
             if(i>=4 && i <= 7)
@@ -70,13 +69,13 @@ class Matrix{
         int cols_;
         int rows_;
         double * mat_v_; // experiment.
-        std::vector<std::vector<double>> mat_; 
+        std::vector<std::vector<double> > mat_; 
 };
 
 
 
 Matrix Matrix::sum(Matrix a ,Matrix b){ //Matrix Matrix::operator+(Matrix A)     
-    std::vector<std::vector<double>> result(
+    std::vector<std::vector<double> > result(
         4,
         std::vector<double>(4, 0)
     );
@@ -91,7 +90,7 @@ Matrix Matrix::sum(Matrix a ,Matrix b){ //Matrix Matrix::operator+(Matrix A)
 };
 
 Matrix Matrix::product(Matrix a , Matrix b){ //Matrix Matrix::operator*(Matrix A)     
-     std::vector<std::vector<double>> result(
+     std::vector<std::vector<double> > result(
             4,
             std::vector<double>(4, 0)
         );
