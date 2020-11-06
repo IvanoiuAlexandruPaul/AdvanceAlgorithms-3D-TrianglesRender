@@ -28,8 +28,8 @@ class Pipeline {
     }
 
     void render(std::vector<Triangle> primitives) {
-        primitives = pt_.Project(primitives);
-        primitives = cl_.Clip(primitives);
+        primitives = pt_.project(primitives);
+        primitives = cl_.clip(primitives);
 
         std::list<Fragment> fragments;
         for (Triangle& triangle : primitives) {
@@ -92,9 +92,9 @@ class TrianglesTransform {
 class Projection {
 
     public:
-        std::vector<Triangle> Project(std::vector<Triangle> triangles){
+        std::vector<Triangle> project(std::vector<Triangle> triangles){
             std::vector<Triangle> new_triangles; 
-            Matrix mt = Perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
+            Matrix mt = perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
                 for(Vertex v: t.get_vertex()){
@@ -107,8 +107,8 @@ class Projection {
             return new_triangles;
         }
 
-        //Perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
-        Matrix Perspective(float left, float right, float top, float bottom, float near, float far) {
+        //perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
+        Matrix perspective(float left, float right, float top, float bottom, float near, float far) {
             std::vector<std::vector<double>> result(
                 4,
                 std::vector<double>(4, 0)
@@ -124,8 +124,8 @@ class Projection {
             return Matrix(4, 4, result);
         };
 
-        //Perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
-        Matrix Perspectiv3(float fov, float aspect, float near, float far) {
+        //perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
+        Matrix perspectiv3(float fov, float aspect, float near, float far) {
             focal = 1.0f / tan(fov / 2.0f); //cotan(fov/2)
             //in teoria dovrebbe essere ((height or width) / 2) * cotan(fov/2)
             std::vector<std::vector<double>> result (
@@ -149,7 +149,7 @@ class Normalize {
 
     public:
 
-        std::vector<Triangle> NormalizeTriangles(std::vector<Triangle> triangles){
+        std::vector<Triangle> normalizeTriangles(std::vector<Triangle> triangles){
             std::vector<Triangle> new_triangles;
             for(Triangle t:triangles){
                 std::vector<Vertex> vL;
@@ -161,7 +161,7 @@ class Normalize {
             return new_triangles;
         }
 
-        std::vector<Vertex> NormalizeVertices(std::vector<Vertex> vertices){
+        std::vector<Vertex> normalizeVertices(std::vector<Vertex> vertices){
             std::vector<Vertex> new_vertices;
             for(Vertex v:vertices){
                 new_vertices.push_back(Vertex(v.get_x()/v.get_w(), v.get_y()/v.get_w(), v.get_z()/v.get_w(), 1.0));

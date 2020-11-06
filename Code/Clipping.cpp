@@ -19,8 +19,8 @@ class Clipping {
 			return this->triangles; 
 		}
 
-		std::vector<Triangle> Clip(std::vector<Triangle> triangles);
-		void  Aux(std::vector<Vertex> vertices, int component_Index,std::vector<Vertex> new_triangles, double axis);
+		std::vector<Triangle> clip(std::vector<Triangle> triangles);
+		void  aux(std::vector<Vertex> vertices, int component_Index,std::vector<Vertex> new_triangles, double axis);
 		void BuildTringles(std::vector<Vertex> v);
 		
 
@@ -33,18 +33,18 @@ class Clipping {
 };
 
 
-std::vector<Triangle> Clipping::Clip(std::vector<Triangle> triangles){
+std::vector<Triangle> Clipping::clip(std::vector<Triangle> triangles){
 	std::vector<Vertex> auxiliartriangles;
 	std::vector<Vertex> all_vertex = {};
 	for(Triangle t:triangles){
 		for(int i = 0; i < 3; i++)
-			Aux(t.get_vertex(), i, auxiliartriangles,1.0f);
+			aux(t.get_vertex(), i, auxiliartriangles,1.0f);
 	}	
 
 	return Final_List_of_Triangles;
 };
 
-void Clipping::Aux(std::vector<Vertex> vertices, int component_Index ,std::vector<Vertex> result_vertices, double componentFactor){
+void Clipping::aux(std::vector<Vertex> vertices, int component_Index ,std::vector<Vertex> result_vertices, double componentFactor){
 
 		Vertex previousVertex = vertices[(vertices.size() - 1)];  //l'ultimo vertex nella lista
 		double previousComponent = previousVertex.Get(component_Index) * componentFactor;
@@ -74,10 +74,10 @@ void Clipping::Aux(std::vector<Vertex> vertices, int component_Index ,std::vecto
 			previousComponent = currentComponent;
 			previousInside = currentInside;
 		}
-		BuildTriangles(result_vertices);
+		buildTriangles(result_vertices);
 };
 
-void BuildTriangles(std::vector<Vertex> listOfTheVertices){
+void buildTriangles(std::vector<Vertex> listOfTheVertices){
 	
 	Vertex tempVertex = listOfTheVertices[0];
 	listOfTheVertices.erase(listOfTheVertices.begin()+0);

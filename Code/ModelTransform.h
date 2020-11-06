@@ -4,7 +4,7 @@
 
 class ModelTransform{
     public: 
-		std::vector<Triangle> Apply(std::vector<Triangle> triangles, Matrix mt){
+		std::vector<Triangle> apply(std::vector<Triangle> triangles, Matrix mt){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
@@ -18,8 +18,8 @@ class ModelTransform{
             return new_triangles;
         }
         
-        std::vector<Triangle> Translation(std::vector<Triangle> triangles, Vertex vector){
-			return Apply(triangles,Matrix(4, 4, 
+        std::vector<Triangle> translation(std::vector<Triangle> triangles, Vertex vector){
+			return apply(triangles,Matrix(4, 4, 
                         {{1,0,0, vector.get_x()},
                          {0,1,0, vector.get_y()},
                          {0,0,1, vector.get_z()},
@@ -27,8 +27,8 @@ class ModelTransform{
                         }));
 		}
       
-		std::vector<Triangle> Rotation_X(std::vector<Triangle> triangles,  double theta){
-		 	return Apply(triangles,Matrix(4, 4, 
+		std::vector<Triangle> rotationX(std::vector<Triangle> triangles,  double theta){
+		 	return apply(triangles,Matrix(4, 4, 
                             {{1, 0, 0, 0},
                              {0, cos(theta),-sin(theta), 0},
                              {0, sin(theta), cos(theta), 0},
@@ -36,8 +36,8 @@ class ModelTransform{
                             }));
 		 }
         
-        std::vector<Triangle> Rotation_Y(std::vector<Triangle> triangles,  double theta){
-		 	return Apply(triangles,Matrix(4, 4, 
+        std::vector<Triangle> rotationY(std::vector<Triangle> triangles,  double theta){
+		 	return apply(triangles,Matrix(4, 4, 
                             {{cos(theta), 0, sin(theta), 0},
                              {0, 1, 0, 0},
                              {-sin(theta), 0, cos(theta), 0},
@@ -45,8 +45,8 @@ class ModelTransform{
                             }));
 		 }
 
-  		std::vector<Triangle> Rotation_Z(std::vector<Triangle> triangles,  double theta){
-		 	return Apply(triangles,Matrix(4, 4, 
+  		std::vector<Triangle> rotationZ(std::vector<Triangle> triangles,  double theta){
+		 	return apply(triangles,Matrix(4, 4, 
                             {{cos(theta), -sin(theta),0, 0},
                              {sin(theta), cos(theta), 0, 0},
                              {0, 0, 1, 0},
@@ -54,8 +54,8 @@ class ModelTransform{
                             }));
 		 }
 		 
-		std::vector<Triangle> Scale(std::vector<Triangle> triangles, Vertex vector){
-			return Apply(triangles,Matrix(4, 4, 
+		std::vector<Triangle> scale(std::vector<Triangle> triangles, Vertex vector){
+			return apply(triangles,Matrix(4, 4, 
                         {{vector.get_x(), 0, 0, 0},
                          {0, vector.get_y(), 0, 0},
                          {0, 0, vector.get_z(), 0},
@@ -64,7 +64,7 @@ class ModelTransform{
 		}
     
         /* 
-        std::vector<Triangle> Translation(std::vector<Triangle> triangles, Vertex vector){
+        std::vector<Triangle> translation(std::vector<Triangle> triangles, Vertex vector){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
@@ -86,7 +86,7 @@ class ModelTransform{
         }
 
         
-        std::vector<Triangle> Rotation_X(std::vector<Triangle> triangles,  double theta){
+        std::vector<Triangle> rotationX(std::vector<Triangle> triangles,  double theta){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){  
                 std::vector<Vertex> nv; 
@@ -106,7 +106,7 @@ class ModelTransform{
             return new_triangles;
         }
 
-        std::vector<Triangle> Rotation_Y(std::vector<Triangle> triangles,  double theta){
+        std::vector<Triangle> rotationY(std::vector<Triangle> triangles,  double theta){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
@@ -126,7 +126,7 @@ class ModelTransform{
             return new_triangles;
         }
         
-        std::vector<Triangle> Rotation_Z(std::vector<Triangle> triangles,  double theta){
+        std::vector<Triangle> rotationZ(std::vector<Triangle> triangles,  double theta){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
@@ -146,7 +146,7 @@ class ModelTransform{
             return new_triangles;
         }
     
-        std::vector<Triangle> Scale(std::vector<Triangle> triangles, Vertex vector){
+        std::vector<Triangle> scale(std::vector<Triangle> triangles, Vertex vector){
             std::vector<Triangle> new_triangles; 
             for(Triangle t:triangles){
                 std::vector<Vertex> nv; 
