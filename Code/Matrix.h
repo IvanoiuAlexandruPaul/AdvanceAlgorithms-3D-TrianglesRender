@@ -87,7 +87,7 @@ Matrix Matrix::sum(Matrix a ,Matrix b){ //Matrix Matrix::operator+(Matrix A)
     }
 
     return mat2_;
-};
+}
 
 Matrix Matrix::product(Matrix a , Matrix b){ //Matrix Matrix::operator*(Matrix A)     
      std::vector<std::vector<double> > result(
@@ -103,7 +103,7 @@ Matrix Matrix::product(Matrix a , Matrix b){ //Matrix Matrix::operator*(Matrix A
         }   
     }
     return mat2_;
-};
+}
 
 
 
