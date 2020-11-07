@@ -4,13 +4,9 @@
 #include <Pipeline.h>
 #include "Clipping.cpp"
 
-int main() {
+int main()
+{
 
-    
-    Matrix m(3, 3, {
-        {1.0, 0.0, 0.0},
-        {0.0, 1.0, 0.0},
-        {0.0, 0.0, 1.0}
-    });
+    Matrix m(3, 3, {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}});
     std::cout << "Hello" << std::endl;
 }
