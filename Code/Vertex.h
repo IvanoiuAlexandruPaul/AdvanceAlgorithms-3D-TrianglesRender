@@ -33,7 +33,7 @@ class Vertex {
             return this->w_; 
         }
         
-        double Get(int index){
+        double getElementVertex(int index){
 		    switch(index){
                 case 0:
                     return get_x();
@@ -47,26 +47,24 @@ class Vertex {
                     break;
 		    }
         }
-        Vertex Mul(Vertex r){
-		    return Vertex(x_ * r.get_x(), y_ * r.get_y(), z_ * r.get_z(), w_ * r.get_w());
-	    }
 
-        Vertex Mul(float r){
+
+        Vertex operator* (double r){
 		    return Vertex(x_ * r, y_ * r, z_ * r, w_ * r);
 	    }
 
-        Vertex Sub(float r){
-		    return  Vertex(x_ - r, y_ - r, z_ - r, w_ - r);
-        }
-
-        Vertex Sub(Vertex r){
+        Vertex operator- (Vertex r){
 		    return  Vertex(x_ - r.get_x(), y_ - r.get_y(), z_ - r.get_z(), w_ - r.get_w());
 	    }
 
-        Vertex Lerp(Vertex other, float lerpAmt){
-		    return Vertex(other.Sub(this).Mul(lerpAmt).Add(this));
+        Vertex operator+ (Vertex r){
+		    return Vertex(x_ + r.get_x(), y_ + r.get_y(), z_ + r.get_z(), w_ + r.get_w());
 	    }
-   
+
+      /*  Vertex Lerp(Vertex vertexThatHasToBeChoped, double lerpAmt){
+		    return Vertex(vertexThatHasToBeChoped.subtraction(this).multiplication(lerpAmt).addition(this));
+	    }
+        */
     private:
         double x_;
         double y_;
@@ -74,6 +72,9 @@ class Vertex {
         double w_;
 };
 
+Vertex lerp(Vertex a, Vertex b, double lerpAmt) {
+    return ((b - a) * lerpAmt) + b;
+}
  
 /**
  * Returns the 4D vector (x_p, y_p, z_p, w_p) representing plane 

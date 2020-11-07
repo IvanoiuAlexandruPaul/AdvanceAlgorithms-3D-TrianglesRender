@@ -19,8 +19,8 @@ class Clipping {
 			return this->triangles; 
 		}
 
-		std::vector<Triangle> clip(std::vector<Triangle> triangles);
-		void  aux(std::vector<Vertex> vertices, int component_Index,std::vector<Vertex> new_triangles, double axis);
+		std::vector<Triangle> Clip(std::vector<Triangle> triangles);
+		void  Aux(std::vector<Vertex> vertices, int component_Index,std::vector<Vertex> new_triangles,std::vector<Triangle> Final_List_of_Triangles);
 		void BuildTringles(std::vector<Vertex> v);
 		
 
@@ -29,55 +29,59 @@ class Clipping {
 		double height; 
 		double depth;
 		std::vector<Triangle> triangles; 
-		std::vector<Triangle> Final_List_of_Triangles;
+		
 };
 
 
-std::vector<Triangle> Clipping::clip(std::vector<Triangle> triangles){
+std::vector<Triangle> Clipping::Clip(std::vector<Triangle> triangles){
 	std::vector<Vertex> auxiliartriangles;
+	std::vector<Triangle> Final_List_of_Triangles;
 	std::vector<Vertex> all_vertex = {};
+	Final_List_of_Triangles.clear();
 	for(Triangle t:triangles){
-		for(int i = 0; i < 3; i++)
-			aux(t.get_vertex(), i, auxiliartriangles,1.0f);
+		for(int i = 0; i <= 3; ++i)
+			Aux(t.get_vertex(), i, auxiliartriangles,Final_List_of_Triangles);
 	}	
 
 	return Final_List_of_Triangles;
 };
 
-void Clipping::aux(std::vector<Vertex> vertices, int component_Index ,std::vector<Vertex> result_vertices, double componentFactor){
+void Clipping::Aux(std::vector<Vertex> vertices, int component_Index ,std::vector<Vertex> result_vertices,std::vector<Triangle> Final_List_of_Triangles){
 
 		Vertex previousVertex = vertices[(vertices.size() - 1)];  //l'ultimo vertex nella lista
-		double previousComponent = previousVertex.Get(component_Index) * componentFactor;
+		double previousComponent = previousVertex.getElementVertex(component_Index);
 		bool previousInside = previousComponent <= previousVertex.get_w(); // se il nostro componente è dentro la zona di clipping
 
 
 		for(auto& it : vertices){
 			Vertex currentVertex = it;
-			double currentComponent = currentVertex.Get(component_Index) * componentFactor;
+			double currentComponent = currentVertex.getElementVertex(component_Index);
 			bool currentInside = currentComponent <= currentVertex.get_w();
 
 			if(currentInside ^ previousInside) // se il nostro current è dentro e il previous non lo è   o viceversa 
-			{
-				//è la distanza che ci server per poter mettere dentro il punto C - ricordati l'esempio video della retta 
-				double lerpAmt = (previousVertex.get_w() - previousComponent) /
-					((previousVertex.get_w() - previousComponent) - 
-					 (currentVertex.get_w() - currentComponent));
-
-				result_vertices.push_back(previousVertex.Lerp(currentVertex, lerpAmt));
+			{	
+				// L = (1-B)/(1-B)-(1-C)
+				double lerpAmt = (currentVertex.get_w() - currentComponent) /
+					((currentVertex.get_w() - currentComponent) - 
+					 (previousVertex.get_w() - previousComponent));
+				
+				//This is the vertex that you will find inside the screen not ouside 
+				result_vertices.push_back(lerp(currentVertex,previousVertex, lerpAmt));
 			}
 
 			if(currentInside)
 			{
 				result_vertices.push_back(currentVertex);
 			}
+
 			previousVertex = currentVertex;
 			previousComponent = currentComponent;
 			previousInside = currentInside;
 		}
-		buildTriangles(result_vertices);
+		BuildTriangles(result_vertices,Final_List_of_Triangles);
 };
 
-void buildTriangles(std::vector<Vertex> listOfTheVertices){
+void BuildTriangles(std::vector<Vertex> listOfTheVertices,std::vector<Triangle> Final_List_of_Triangles){
 	
 	Vertex tempVertex = listOfTheVertices[0];
 	listOfTheVertices.erase(listOfTheVertices.begin()+0);
