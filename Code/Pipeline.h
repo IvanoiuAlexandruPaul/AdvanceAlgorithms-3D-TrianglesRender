@@ -62,37 +62,7 @@ public:
     target_t *createEmptyFragmentBuffer(ScreenMapping screenMapping);
 };
 
-class CharPipeline : Pipeline<char>
-{
-    void show(char *frame, ScreenMapping mapping)
-    {
-        printBuffer(frame, mapping.get_screenWidth(), mapping.get_screenHeight());
-    }
 
-    char *createEmptyFragmentBuffer(ScreenMapping mapping)
-    {
-        int buffer_width = mapping.get_screenWidth();
-        int buffer_height = mapping.get_screenHeight();
-
-        char *buffer = new char[buffer_width * buffer_height];
-        for (int row = 0; row < buffer_height; ++row)
-        {
-            for (int col = 0; col < buffer_width; ++col)
-                buffer[row * buffer_width + col] = '.';
-        }
-        return buffer;
-    }
-};
-
-std::vector<Triangle> applyAll(std::vector<TrianglesTransform> transforms)
-{
-    std::vector<Triangle> a;
-    for (TrianglesTransform t : transforms)
-    { // TODO verify
-        a = t.apply(a);
-    }
-    return a;
-};
 
 class TrianglesTransform
 {
@@ -103,11 +73,15 @@ public:
 class Projection
 {
 
+private:
+    float focal;
+    Matrix mt;
+
 public:
     std::vector<Triangle> project(std::vector<Triangle> triangles)
     {
         std::vector<Triangle> new_triangles;
-        Matrix mt = perspective(-1.0f, 1.0f, 1.0f, -1.0f, 0.1f, 100.0f);
+        // Matrix mt = perspective(-1.0f, 1.0f, 1.0f, -1.0f, 0.1f, 100.0f);
         for (Triangle t : triangles)
         {
             std::vector<Vertex> nv;
@@ -123,7 +97,7 @@ public:
     }
 
     //perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
-    Matrix perspective(float left, float right, float top, float bottom, float near, float far)
+    Projection(float left, float right, float top, float bottom, float near, float far)
     {
         std::vector<std::vector<double>> result(
             4,
@@ -136,11 +110,11 @@ public:
         result[2][3] = -2.0f * far * near / (far - near);
         result[2][3] = -1.0f;
         //result[3][3] = 0.0f;
-        return Matrix(4, 4, result);
-    };
+        mt = Matrix(4, 4, result);
+    }
 
     //perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
-    Matrix perspectiv3(float fov, float aspect, float near, float far)
+    void perspectiv3(float fov, float aspect, float near, float far)
     {
         focal = 1.0f / tan(fov / 2.0f); //cotan(fov/2)
         //in teoria dovrebbe essere ((height or width) / 2) * cotan(fov/2)
@@ -152,11 +126,10 @@ public:
         result[2][2] = (far + near) / (near - far);
         result[3][3] = 2 * far * near / (near - far);
         result[3][2] = -1.0f;
-        return Matrix(4, 4, result);
-    };
+        mt = Matrix(4, 4, result);
+    }
 
-private:
-    float focal;
+
 };
 
 class Normalize
@@ -262,23 +235,7 @@ class FragmentShader
     virtual target_t shade(Fragment fragment);
 };
 
-class CharFragmentShader : FragmentShader<char>
-{
-    char shade(Fragment fragment)
-    {
-        return '#'; // TODO per farlo come quello del prof bisogna trovare il primo decimale di fragment.get_z().
-    }
-};
 
-double max(double a, double b)
-{
-    return a > b ? a : b;
-}
-
-double min(double a, double b)
-{
-    return a < b ? a : b;
-}
 
 double edge(double p_x, double p_y, double a_x, double a_y, double b_x, double b_y)
 {
@@ -395,3 +352,33 @@ void printBuffer(char *buffer, int buffer_width, int buffer_height)
         std::cout << std::endl;
     }
 }
+
+class CharFragmentShader : FragmentShader<char>
+{
+    char shade(Fragment fragment)
+    {
+        return '#'; // TODO per farlo come quello del prof bisogna trovare il primo decimale di fragment.get_z().
+    }
+};
+
+class CharPipeline : Pipeline<char>
+{
+    void show(char *frame, ScreenMapping mapping)
+    {
+        printBuffer(frame, mapping.get_screenWidth(), mapping.get_screenHeight());
+    }
+
+    char *createEmptyFragmentBuffer(ScreenMapping mapping)
+    {
+        int buffer_width = mapping.get_screenWidth();
+        int buffer_height = mapping.get_screenHeight();
+
+        char *buffer = new char[buffer_width * buffer_height];
+        for (int row = 0; row < buffer_height; ++row)
+        {
+            for (int col = 0; col < buffer_width; ++col)
+                buffer[row * buffer_width + col] = '.';
+        }
+        return buffer;
+    }
+};
