@@ -45,27 +45,13 @@ private:
 class Fragment
 {
 public:
-    Fragment(int pixel_x, int pixel_y, double z)
-    {
-        this->pixel_x = pixel_x;
-        this->pixel_y = pixel_y;
-        this->z = z;
-    }
+    Fragment(int pixel_x, int pixel_y, double z);
 
-    int get_x()
-    {
-        return pixel_x;
-    }
+    int get_x();
 
-    int get_y()
-    {
-        return pixel_y;
-    }
+    int get_y();
 
-    double get_z()
-    {
-        return z;
-    }
+    double get_z();
 
 private:
     int pixel_x;
@@ -78,8 +64,6 @@ class FragmentShader
 {
     virtual target_t shade(Fragment fragment);
 };
-
-
 
 template <typename target_t>
 class Pipeline
@@ -101,16 +85,6 @@ public:
 
     target_t *createEmptyFragmentBuffer(ScreenMapping screenMapping);
 };
-
-
-
-class TrianglesTransform
-{
-public:
-    std::vector<Triangle> apply(std::vector<Triangle> triangles);
-};
-
-
 
 class Normalize
 {

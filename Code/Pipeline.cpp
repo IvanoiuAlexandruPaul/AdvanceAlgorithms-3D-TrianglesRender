@@ -121,3 +121,25 @@ int ScreenMapping::get_screenHeight()
     return screenHeight;
 }
 
+Fragment::Fragment(int pixel_x, int pixel_y, double z)
+{
+    this->pixel_x = pixel_x;
+    this->pixel_y = pixel_y;
+    this->z = z;
+}
+
+int Fragment::get_x()
+{
+    return pixel_x;
+}
+
+int Fragment::get_y()
+{
+    return pixel_y;
+}
+
+double Fragment::get_z()
+    {
+        return z;
+    }
+
