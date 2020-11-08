@@ -139,9 +139,9 @@ int Fragment::get_y()
 }
 
 double Fragment::get_z()
-    {
-        return z;
-    }
+{
+    return z;
+}
 
 std::vector<Triangle> normalizeTriangles(std::vector<Triangle> triangles)
 {
@@ -258,7 +258,6 @@ std::list<Fragment> zbuffering(std::list<Fragment> fragments)
     return result;
 }
 
-
 void printBuffer(char *buffer, int buffer_width, int buffer_height)
 {
     for (int row = 0; row < buffer_height; ++row)
@@ -271,3 +270,26 @@ void printBuffer(char *buffer, int buffer_width, int buffer_height)
     }
 }
 
+char CharFragmentShader::shade(Fragment fragment)
+{
+    return '#'; // TODO per farlo come quello del prof bisogna trovare il primo decimale di fragment.get_z().
+}
+
+void CharPipeline::show(char *frame, ScreenMapping mapping)
+{
+    printBuffer(frame, mapping.get_screenWidth(), mapping.get_screenHeight());
+}
+
+char *CharPipeline::createEmptyFragmentBuffer(ScreenMapping mapping)
+{
+    int buffer_width = mapping.get_screenWidth();
+    int buffer_height = mapping.get_screenHeight();
+
+    char *buffer = new char[buffer_width * buffer_height];
+    for (int row = 0; row < buffer_height; ++row)
+    {
+        for (int col = 0; col < buffer_width; ++col)
+            buffer[row * buffer_width + col] = '.';
+    }
+    return buffer;
+}

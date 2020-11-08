@@ -22,6 +22,7 @@ public:
     Projection(float fov, float aspect, float near, float far);
 };
 
+// TODO Valutare se cambiare nome. Magari ScreenContext o ScreenManager?
 class ScreenMapping
 {
 public:
@@ -92,7 +93,7 @@ double edge(double p_x, double p_y, double a_x, double a_y, double b_x, double b
 
 bool edgeTest(double p_x, double p_y, Vertex a, Vertex b, Vertex c);
 
-
+// TODO valutare se farlo diventare un metodo di ScreenMapping.
 // Insertion in a list is more efficient rather than vector.
 std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm);
 
@@ -113,32 +114,15 @@ std::list<Fragment> zbuffering(std::list<Fragment> fragments);
 
 void printBuffer(char *buffer, int buffer_width, int buffer_height);
 
-class CharFragmentShader : FragmentShader<char>
+// TODO Discutere se tenere come classe anche se senza stato.
+class CharFragmentShader : FragmentShader<char> 
 {
-    char shade(Fragment fragment)
-    {
-        return '#'; // TODO per farlo come quello del prof bisogna trovare il primo decimale di fragment.get_z().
-    }
+    char shade(Fragment fragment);
 };
 
 class CharPipeline : Pipeline<char>
 {
-    void show(char *frame, ScreenMapping mapping)
-    {
-        printBuffer(frame, mapping.get_screenWidth(), mapping.get_screenHeight());
-    }
+    void show(char *frame, ScreenMapping mapping);
 
-    char *createEmptyFragmentBuffer(ScreenMapping mapping)
-    {
-        int buffer_width = mapping.get_screenWidth();
-        int buffer_height = mapping.get_screenHeight();
-
-        char *buffer = new char[buffer_width * buffer_height];
-        for (int row = 0; row < buffer_height; ++row)
-        {
-            for (int col = 0; col < buffer_width; ++col)
-                buffer[row * buffer_width + col] = '.';
-        }
-        return buffer;
-    }
+    char *createEmptyFragmentBuffer(ScreenMapping mapping); // TODO Valutare se muovere questo in ScreenMapping...
 };
