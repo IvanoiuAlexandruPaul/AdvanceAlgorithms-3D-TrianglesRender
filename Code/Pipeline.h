@@ -5,7 +5,6 @@
 #include "Triangle.h"
 #include "Clipping.cpp"
 
-
 // Projection pipeline step
 class Projection
 {
@@ -22,7 +21,6 @@ public:
     //perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
     Projection(float fov, float aspect, float near, float far);
 };
-
 
 class ScreenMapping
 {
@@ -86,100 +84,17 @@ public:
     target_t *createEmptyFragmentBuffer(ScreenMapping screenMapping);
 };
 
-class Normalize
-{
+std::vector<Triangle> normalizeTriangles(std::vector<Triangle> triangles);
 
-public:
-    std::vector<Triangle> normalizeTriangles(std::vector<Triangle> triangles)
-    {
-        std::vector<Triangle> new_triangles;
-        for (Triangle t : triangles)
-        {
-            std::vector<Vertex> vL;
-            for (Vertex v : t.get_vertex())
-            {
-                vL.push_back(Vertex(v.get_x() / v.get_w(), v.get_y() / v.get_w(), v.get_z() / v.get_w(), 1.0));
-            }
-            new_triangles.push_back(Triangle(vL[0], vL[1], vL[2]));
-        }
-        return new_triangles;
-    }
+std::vector<Vertex> normalizeVertices(std::vector<Vertex> vertices);
 
-    std::vector<Vertex> normalizeVertices(std::vector<Vertex> vertices)
-    {
-        std::vector<Vertex> new_vertices;
-        for (Vertex v : vertices)
-        {
-            new_vertices.push_back(Vertex(v.get_x() / v.get_w(), v.get_y() / v.get_w(), v.get_z() / v.get_w(), 1.0));
-        }
-        return new_vertices;
-    }
-};
+double edge(double p_x, double p_y, double a_x, double a_y, double b_x, double b_y);
 
+bool edgeTest(double p_x, double p_y, Vertex a, Vertex b, Vertex c);
 
-double edge(double p_x, double p_y, double a_x, double a_y, double b_x, double b_y)
-{
-    return (p_x - a_x) * (b_y - a_y) -
-           (p_y - a_y) * (b_x - a_x);
-}
-
-bool edgeTest(double p_x, double p_y, Vertex a, Vertex b, Vertex c)
-{
-
-    double t_ab = edge(p_x, p_y, a.get_x(), a.get_y(), b.get_x(), b.get_y());
-    double t_bc = edge(p_x, p_y, b.get_x(), b.get_y(), c.get_x(), c.get_y());
-    double t_ca = edge(p_x, p_y, c.get_x(), c.get_y(), a.get_x(), a.get_y());
-}
 
 // Insertion in a list is more efficient rather than vector.
-std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm)
-{
-
-    std::list<Fragment> fragments;
-
-    double max_x, max_y, min_x, min_y;
-    Vertex a = t.get_a();
-    Vertex b = t.get_b();
-    Vertex c = t.get_c();
-
-    // Find the conscribed square around the triangle in cartesian coordinates.
-    max_x = std::max(std::max(a.get_x(), b.get_x()), c.get_x());
-    min_x = std::min(std::min(a.get_x(), b.get_x()), c.get_x());
-    max_y = std::max(std::max(a.get_y(), b.get_y()), c.get_y());
-    min_y = std::min(std::min(a.get_y(), b.get_y()), c.get_y());
-
-    // Convert coordinates to pixel coordinates.
-    sm.mapCartesianToScreenPixels(max_x, max_y, &max_x, &max_y);
-    sm.mapCartesianToScreenPixels(min_x, min_y, &min_x, &min_y);
-
-    // P: x_p * x + z_p * z + y_p * y + w_p * w = 0
-    Vertex plane = planePassingPoints(a, b, c);
-
-    for (int row = min_x; row < max_x; ++row)
-    {
-        for (int col = min_y; col < max_y; ++col)
-        {
-            double p_x, p_y;
-            sm.mapScreenPixelsToCartesian(row, col, &p_x, &p_y);
-
-            // Edge test to find out if the pixel is in the triangle.
-            if (edgeTest(p_x, p_y, a, b, c))
-            {
-                // Create fragment:
-
-                // Calculate z = (- x_p * x - y_p * y - w_p) / z_p.
-                double p_z = (-plane.get_x() * p_x - plane.get_y() * p_y - plane.get_w()) / plane.get_z();
-
-                // Instantiate Fragment and prepare to return.
-                Fragment f(row, col, p_z);
-
-                fragments.push_back(f);
-            }
-        }
-    }
-
-    return fragments;
-}
+std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm);
 
 int fragmentComparator(Fragment a, Fragment b)
 {
@@ -194,44 +109,9 @@ int fragmentComparator(Fragment a, Fragment b)
     return 0;
 }
 
-std::list<Fragment> zbuffering(std::list<Fragment> fragments)
-{
+std::list<Fragment> zbuffering(std::list<Fragment> fragments);
 
-    std::sort(fragments.begin(), fragments.end(), fragmentComparator);
-
-    Fragment tmp = fragments.front();
-
-    std::list<Fragment> result;
-    for (Fragment &fragment : fragments)
-    {
-        if (tmp.get_x() != fragment.get_x() || tmp.get_y() != fragment.get_y())
-        {
-            result.push_back(tmp);
-            tmp = fragment;
-        }
-        else
-        {
-            if (tmp.get_z() > fragment.get_z())
-            {
-                tmp = fragment;
-            }
-        }
-    }
-
-    return result;
-}
-
-void printBuffer(char *buffer, int buffer_width, int buffer_height)
-{
-    for (int row = 0; row < buffer_height; ++row)
-    {
-        for (int col = 0; col < buffer_width; ++col)
-        {
-            std::cout << buffer[row * buffer_width + col];
-        }
-        std::cout << std::endl;
-    }
-}
+void printBuffer(char *buffer, int buffer_width, int buffer_height);
 
 class CharFragmentShader : FragmentShader<char>
 {
