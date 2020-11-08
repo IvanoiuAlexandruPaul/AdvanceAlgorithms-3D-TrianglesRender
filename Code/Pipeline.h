@@ -3,7 +3,7 @@
 #include <list>
 #include <algorithm>
 #include "Triangle.h"
-#include "Clipping.cpp"
+#include "Clipping.h"
 #include "Matrix.h"
 
 #ifndef PIPELINE_H

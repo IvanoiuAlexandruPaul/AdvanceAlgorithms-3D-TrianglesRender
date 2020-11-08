@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "Clipping.cpp"
-#include "Matrix.h"
 #include "Pipeline.h"
 
 int main()

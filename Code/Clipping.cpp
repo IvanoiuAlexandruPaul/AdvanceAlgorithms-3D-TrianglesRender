@@ -14,7 +14,6 @@ std::vector<Triangle> Clipping::clip(std::vector<Triangle> triangles)
 	return finalListOfTriangles;
 };
 
-
 void Clipping::buildTriangles(std::vector<Vertex> listOfTheVertices, std::vector<Triangle> finalListOfTriangles)
 {
 
@@ -30,7 +29,6 @@ void Clipping::buildTriangles(std::vector<Vertex> listOfTheVertices, std::vector
 		}
 	}
 }
-
 
 void Clipping::aux(std::vector<Vertex> vertices, int component_Index, std::vector<Vertex> result_vertices, std::vector<Triangle> finalListOfTriangles)
 {
@@ -67,3 +65,8 @@ void Clipping::aux(std::vector<Vertex> vertices, int component_Index, std::vecto
 	}
 	buildTriangles(result_vertices, finalListOfTriangles);
 };
+
+std::vector<Triangle> Clipping::get_triangles()
+{
+	return triangles;
+}
