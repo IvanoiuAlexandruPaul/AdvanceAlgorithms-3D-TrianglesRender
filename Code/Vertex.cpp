@@ -10,12 +10,12 @@ Vertex::Vertex(double x, double y, double z)
     Vertex(x, y, z, 1);
 }
 
-Vertex::Vertex(double x, double y, double z, double w)
+Vertex::Vertex(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_(w)
 {
-    this->x_ = x;
+    /* this->x_ = x;
     this->y_ = y;
     this->z_ = z;
-    this->w_ = w;
+    this->w_ = w; */
 }
 
 double Vertex::get_x()

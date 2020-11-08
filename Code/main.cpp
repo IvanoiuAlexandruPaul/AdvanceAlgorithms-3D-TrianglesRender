@@ -43,7 +43,7 @@ int main()
     std::vector<Triangle> triangles = {t1, t2};
     pipeline.render(triangles);
 
-    std::cout << "Hello" << std::endl;
+    // std::cout << "Hello" << std::endl;
 
     return 0;
 }

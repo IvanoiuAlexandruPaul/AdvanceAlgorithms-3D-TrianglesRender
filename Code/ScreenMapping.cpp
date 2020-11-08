@@ -1,10 +1,10 @@
 #include "ScreenMapping.h"
 #include <math.h>
 
-ScreenMapping::ScreenMapping(int screenWidth, int screenHeight)
+ScreenMapping::ScreenMapping(int screenWidth, int screenHeight) : screenHeight(screenHeight), screenWidth(screenWidth)
 {
-    this->screenHeight = screenHeight;
-    this->screenWidth = screenWidth;
+    /* this->screenHeight = screenHeight;
+    this->screenWidth = screenWidth; */
 }
 
 void ScreenMapping::mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY)

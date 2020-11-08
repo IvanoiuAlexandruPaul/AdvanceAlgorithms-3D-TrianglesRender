@@ -39,9 +39,9 @@ public:
 
     virtual void render(std::vector<Triangle>& primitives);
 
-    virtual void show(target_t * frame, ScreenMapping& mapping);
+    virtual void show(target_t * frame, ScreenMapping& mapping) = 0;
 
-    virtual target_t *createEmptyFragmentBuffer(ScreenMapping& screenMapping);
+    virtual target_t *createEmptyFragmentBuffer(ScreenMapping& screenMapping) = 0;
 };
 
 std::vector<Triangle> normalizeTriangles(std::vector<Triangle>& triangles);
@@ -77,7 +77,7 @@ class CharPipeline : public Pipeline<char>
     public:
         virtual void show(char *frame, ScreenMapping& mapping);
         virtual char *createEmptyFragmentBuffer(ScreenMapping& mapping); // TODO Valutare se muovere questo in ScreenMapping...
-        virtual void render(std::vector<Triangle>& triangles);
+        // virtual void render(std::vector<Triangle>& triangles);
 };
 
 

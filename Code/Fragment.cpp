@@ -1,10 +1,10 @@
 #include "Fragment.h"
 
-Fragment::Fragment(int pixel_x, int pixel_y, double z)
+Fragment::Fragment(int pixel_x, int pixel_y, double z) : pixel_x(pixel_x), pixel_y(pixel_y), z(z)
 {
-    this->pixel_x = pixel_x;
+    /* this->pixel_x = pixel_x;
     this->pixel_y = pixel_y;
-    this->z = z;
+    this->z = z; */
 }
 
 int Fragment::get_x() const
