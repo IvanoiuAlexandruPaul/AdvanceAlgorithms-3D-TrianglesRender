@@ -50,3 +50,74 @@ std::vector<Triangle> Projection::project(std::vector<Triangle> triangles)
     }
     return new_triangles;
 }
+
+template <typename target_t>
+Pipeline<target_t>::Pipeline(Projection pt, ScreenMapping sm, Clipping cl, FragmentShader<target_t> fs)
+{
+    // mt_ = mt;
+    pt_ = pt;
+    sm_ = sm;
+    cl_ = cl;
+    fs_ = fs;
+}
+
+template <typename target_t>
+void Pipeline<target_t>::render(std::vector<Triangle> primitives)
+{
+    primitives = pt_.project(primitives);
+    primitives = cl_.clip(primitives);
+
+    std::list<Fragment> fragments;
+    for (Triangle &triangle : primitives)
+    {
+        fragments.push_back(rasterizeTriangle(triangle));
+    }
+
+    fragments = zbuffering(fragments);
+    target_t *frame = createEmptyFragmentBuffer(sm_);
+
+    for (int x = 0; x < sm_.get_screenHeight(), ++x)
+    {
+        for (int y = 0; y < sm_.get_screenWidth(), ++y)
+        {
+            for (Fragment &fragment : fragments)
+            {
+                if (fragment.get_x() == x && fragment.get_y() == y)
+                {
+                    frame[x][y] = fs_.shade(fragment);
+                }
+            }
+        }
+    }
+
+    show(frame, sm_);
+}
+
+ScreenMapping::ScreenMapping(int screenWidth, int screenHeight)
+{
+    this->screenHeight = screenHeight;
+    this->screenWidth = screenWidth;
+}
+
+void ScreenMapping::mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY)
+{
+    *coordinateX = screenx - screenWidth / 2;
+    *coordinateY = -screeny + screenHeight / 2;
+}
+
+void ScreenMapping::mapCartesianToScreenPixels(double x, double y, double *pixelRow, double *pixelCol)
+{
+    *pixelRow = floor((screenWidth / 2) + x);
+    *pixelCol = floor((screenHeight / 2) - y);
+}
+
+int ScreenMapping::get_screenWidth()
+{
+    return screenWidth;
+}
+
+int ScreenMapping::get_screenHeight()
+{
+    return screenHeight;
+}
+

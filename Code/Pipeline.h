@@ -23,6 +23,64 @@ public:
     Projection(float fov, float aspect, float near, float far);
 };
 
+
+class ScreenMapping
+{
+public:
+    ScreenMapping(int screenWidth, int screenHeight);
+
+    void mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY);
+
+    void mapCartesianToScreenPixels(double x, double y, double *pixelRow, double *pixelCol);
+
+    int get_screenWidth();
+
+    int get_screenHeight();
+
+private:
+    int screenWidth;
+    int screenHeight;
+};
+
+class Fragment
+{
+public:
+    Fragment(int pixel_x, int pixel_y, double z)
+    {
+        this->pixel_x = pixel_x;
+        this->pixel_y = pixel_y;
+        this->z = z;
+    }
+
+    int get_x()
+    {
+        return pixel_x;
+    }
+
+    int get_y()
+    {
+        return pixel_y;
+    }
+
+    double get_z()
+    {
+        return z;
+    }
+
+private:
+    int pixel_x;
+    int pixel_y;
+    double z;
+};
+
+template <typename target_t>
+class FragmentShader
+{
+    virtual target_t shade(Fragment fragment);
+};
+
+
+
 template <typename target_t>
 class Pipeline
 {
@@ -35,45 +93,9 @@ private:
     FragmentShader<target_t> fs_;
 
 public:
-    Pipeline( Projection pt, ScreenMapping sm, Clipping cl, FragmentShader<target_t> fs)
-    {
-        // mt_ = mt;
-        pt_ = pt;
-        sm_ = sm;
-        cl_ = cl;
-        fs_ = fs;
-    }
+    Pipeline(Projection pt, ScreenMapping sm, Clipping cl, FragmentShader<target_t> fs);
 
-    void render(std::vector<Triangle> primitives)
-    {
-        primitives = pt_.project(primitives);
-        primitives = cl_.clip(primitives);
-
-        std::list<Fragment> fragments;
-        for (Triangle &triangle : primitives)
-        {
-            fragments.push_back(rasterizeTriangle(triangle));
-        }
-
-        fragments = zbuffering(fragments);
-        target_t *frame = createEmptyFragmentBuffer(sm_);
-
-        for (int x = 0; x < sm_.get_screenHeight(), ++x)
-        {
-            for (int y = 0; y < sm_.get_screenWidth(), ++y)
-            {
-                for (Fragment &fragment : fragments)
-                {
-                    if (fragment.get_x() == x && fragment.get_y() == y)
-                    {
-                        frame[x][y] = fs_.shade(fragment);
-                    }
-                }
-            }
-        }
-
-        show(frame, sm_);
-    }
+    void render(std::vector<Triangle> primitives);
 
     void show(target_t *frame, ScreenMapping mapping);
 
@@ -119,80 +141,6 @@ public:
         return new_vertices;
     }
 };
-
-class ScreenMapping
-{
-public:
-    ScreenMapping(int screenWidth, int screenHeight)
-    {
-        this->screenHeight = screenHeight;
-        this->screenWidth = screenWidth;
-    }
-
-    void mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY)
-    {
-        *coordinateX = screenx - screenWidth / 2;
-        *coordinateY = -screeny + screenHeight / 2;
-    }
-
-    void mapCartesianToScreenPixels(double x, double y, double *pixelRow, double *pixelCol)
-    {
-        *pixelRow = floor((screenWidth / 2) + x);
-        *pixelCol = floor((screenHeight / 2) - y);
-    }
-
-    int get_screenWidth()
-    {
-        return screenWidth;
-    }
-
-    int get_screenHeight()
-    {
-        return screenHeight;
-    }
-
-private:
-    int screenWidth;
-    int screenHeight;
-};
-
-class Fragment
-{
-public:
-    Fragment(int pixel_x, int pixel_y, double z)
-    {
-        this->pixel_x = pixel_x;
-        this->pixel_y = pixel_y;
-        this->z = z;
-    }
-
-    int get_x()
-    {
-        return pixel_x;
-    }
-
-    int get_y()
-    {
-        return pixel_y;
-    }
-
-    double get_z()
-    {
-        return z;
-    }
-
-private:
-    int pixel_x;
-    int pixel_y;
-    double z;
-};
-
-template <typename target_t>
-class FragmentShader
-{
-    virtual target_t shade(Fragment fragment);
-};
-
 
 
 double edge(double p_x, double p_y, double a_x, double a_y, double b_x, double b_y)
