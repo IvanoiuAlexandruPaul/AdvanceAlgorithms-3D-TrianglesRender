@@ -5,6 +5,9 @@
 #include "Triangle.h"
 #include "Clipping.cpp"
 
+#ifndef PIPELINE_H
+#define PIPELINE_H
+
 // Projection pipeline step
 class Projection
 {
@@ -126,3 +129,5 @@ class CharPipeline : Pipeline<char>
 
     char *createEmptyFragmentBuffer(ScreenMapping mapping); // TODO Valutare se muovere questo in ScreenMapping...
 };
+
+#endif
