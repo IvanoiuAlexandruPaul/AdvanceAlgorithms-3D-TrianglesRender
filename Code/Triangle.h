@@ -17,7 +17,7 @@ public:
 
     Vertex get_c();
 
-    std::vector<Vertex> get_vertex();
+    std::vector<Vertex> get_vertex() const;
 
 private:
     Vertex a;

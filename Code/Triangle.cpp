@@ -22,7 +22,7 @@ Vertex Triangle::get_c()
     return this->c;
 }
 
-std::vector<Vertex> Triangle::get_vertex()
+std::vector<Vertex> Triangle::get_vertex() const
 {
     return {this->a, this->b, this->c};
 }

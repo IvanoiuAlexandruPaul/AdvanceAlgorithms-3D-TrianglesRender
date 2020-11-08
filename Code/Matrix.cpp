@@ -93,6 +93,8 @@ double Matrix::operator()(int row, int col)
     {
         std::cout << msg << '\n';
     }
+
+    return -1.0;
 }
 
 double Matrix::operator[](int i)
@@ -105,4 +107,6 @@ double Matrix::operator[](int i)
         return mat_[i][2];
     if (i >= 12 && i <= 15)
         return mat_[i][3];
+
+    return -1.0;
 }

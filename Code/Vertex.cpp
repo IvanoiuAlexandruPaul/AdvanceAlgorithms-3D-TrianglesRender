@@ -53,6 +53,7 @@ double Vertex::operator[](int index)
     default:
         break;
     }
+    return -100.0;
 }
 
 Vertex Vertex::operator*(double r)

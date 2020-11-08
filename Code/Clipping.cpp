@@ -1,20 +1,22 @@
 #include "Clipping.h"
 
-std::vector<Triangle> Clipping::clip(std::vector<Triangle> triangles)
+std::vector<Triangle> Clipping::clip(std::vector<Triangle>& triangles)
 {
 	std::vector<Vertex> auxiliartriangles;
 	std::vector<Triangle> finalListOfTriangles;
 	std::vector<Vertex> all_vertex = {};
 	for (Triangle t : triangles)
 	{
-		for (int i = 0; i <= 3; ++i)
-			aux(t.get_vertex(), i, auxiliartriangles, finalListOfTriangles);
+		for (int i = 0; i <= 3; ++i){
+			std::vector<Vertex> vertex = t.get_vertex();
+			aux(vertex , i, auxiliartriangles, finalListOfTriangles);
+		}
 	}
 
 	return finalListOfTriangles;
 };
 
-void Clipping::buildTriangles(std::vector<Vertex> listOfTheVertices, std::vector<Triangle> finalListOfTriangles)
+void Clipping::buildTriangles(std::vector<Vertex>& listOfTheVertices, std::vector<Triangle>& finalListOfTriangles)
 {
 
 	Vertex tempVertex = listOfTheVertices[0];
@@ -30,7 +32,7 @@ void Clipping::buildTriangles(std::vector<Vertex> listOfTheVertices, std::vector
 	}
 }
 
-void Clipping::aux(std::vector<Vertex> vertices, int component_Index, std::vector<Vertex> result_vertices, std::vector<Triangle> finalListOfTriangles)
+void Clipping::aux(std::vector<Vertex>& vertices, int component_Index, std::vector<Vertex>& result_vertices, std::vector<Triangle>& finalListOfTriangles)
 {
 
 	Vertex previousVertex = vertices[(vertices.size() - 1)]; //l'ultimo vertex nella lista
@@ -65,8 +67,3 @@ void Clipping::aux(std::vector<Vertex> vertices, int component_Index, std::vecto
 	}
 	buildTriangles(result_vertices, finalListOfTriangles);
 };
-
-std::vector<Triangle> Clipping::get_triangles()
-{
-	return triangles;
-}
