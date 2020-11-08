@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "Triangle.h"
 #include "Clipping.cpp"
+#include "Matrix.h"
 
 #ifndef PIPELINE_H
 #define PIPELINE_H

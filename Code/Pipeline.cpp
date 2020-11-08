@@ -3,9 +3,7 @@
 // Full constructor with the field of view coordinates
 Projection::Projection(float left, float right, float top, float bottom, float near, float far)
 {
-    std::vector<std::vector<double>> result(
-        4,
-        std::vector<double>(4, 0));
+    std::vector<std::vector<double>> result(4, std::vector<double>(4, 0));
     result[0][0] = 2.0f * near / (right - left);
     result[0][3] = (right + left) / (right - left);
     result[1][1] = 2.0f * near / (top - bottom);

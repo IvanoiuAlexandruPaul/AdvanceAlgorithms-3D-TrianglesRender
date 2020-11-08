@@ -1,5 +1,7 @@
 #include "Matrix.h"
 
+Matrix::Matrix() {}
+
 Matrix::Matrix(int rows, int cols, std::vector<std::vector<double>> mat) : rows_(rows), cols_(cols), mat_(mat)
 {
 }

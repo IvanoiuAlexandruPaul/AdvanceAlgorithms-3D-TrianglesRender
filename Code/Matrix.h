@@ -8,8 +8,8 @@
 class Matrix
 {
 public:
+    Matrix();
     Matrix(int rows, int cols, std::vector<std::vector<double>> mat);
-
     Matrix operator* (Matrix);
     Matrix operator+ (Matrix);
 
