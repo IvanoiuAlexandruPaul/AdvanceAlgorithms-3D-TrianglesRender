@@ -49,13 +49,13 @@ void Clipping::Aux(std::vector<Vertex> vertices, int component_Index, std::vecto
 {
 
 	Vertex previousVertex = vertices[(vertices.size() - 1)]; //l'ultimo vertex nella lista
-	double previousComponent = previousVertex.getElementVertex(component_Index);
+	double previousComponent = previousVertex[component_Index];
 	bool previousInside = previousComponent <= previousVertex.get_w(); // se il nostro componente è dentro la zona di clipping
 
 	for (auto &it : vertices)
 	{
 		Vertex currentVertex = it;
-		double currentComponent = currentVertex.getElementVertex(component_Index);
+		double currentComponent = currentVertex[component_Index];
 		bool currentInside = currentComponent <= currentVertex.get_w();
 
 		if (currentInside ^ previousInside) // se il nostro current è dentro e il previous non lo è   o viceversa
