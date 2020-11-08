@@ -43,7 +43,7 @@ std::vector<Triangle> Projection::project(std::vector<Triangle> triangles)
         for (Vertex v : t.get_vertex())
         {
             Matrix vc = Matrix(4, 1, {{v.get_x()}, {v.get_y()}, {v.get_z()}, {v.get_w()}});
-            Matrix nc = mt.product(mt, vc);
+            Matrix nc = mt * vc;
             nv.push_back({nc(0, 0), nc(1, 0), nc(2, 0)});
         }
         new_triangles.push_back({nv.at(0), nv.at(1), nv.at(2)});
