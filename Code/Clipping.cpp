@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <Triangle.h>
 #include <list>
+#include "Triangle.h"
 
 class Clipping
 {

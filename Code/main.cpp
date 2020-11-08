@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
-#include "Matrix.h"
-#include <Pipeline.h>
 #include "Clipping.cpp"
+#include "Matrix.h"
+#include "Pipeline.h"
 
 int main()
 {

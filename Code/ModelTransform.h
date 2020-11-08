@@ -1,6 +1,6 @@
 #include <vector>
-#include <Triangle.h>
 #include <math.h>
+#include "Triangle.h"
 
 class ModelTransform
 {

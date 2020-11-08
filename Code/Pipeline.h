@@ -1,25 +1,43 @@
 #include <vector>
-#include <Triangle.h>
 #include <math.h>
 #include <list>
 #include <algorithm>
+#include "Triangle.h"
 #include "Clipping.cpp"
+
+
+// Projection pipeline step
+class Projection
+{
+
+private:
+    Matrix mt;
+
+public:
+    std::vector<Triangle> project(std::vector<Triangle> triangles);
+
+    //perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
+    Projection(float left, float right, float top, float bottom, float near, float far);
+
+    //perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
+    Projection(float fov, float aspect, float near, float far);
+};
 
 template <typename target_t>
 class Pipeline
 {
 private:
     //Ignora, non necessario nella prima parte
-    ModelTransform wt_; // TODO Capire come usarla nella pipeline.
+    // ModelTransform wt_; // TODO Capire come usarla nella pipeline.
     Projection pt_;
     ScreenMapping sm_;
     Clipping cl_;
     FragmentShader<target_t> fs_;
 
 public:
-    Pipeline(ModelTransform mt, Projection pt, ScreenMapping sm, Clipping cl, FragmentShader<target_t> fs)
+    Pipeline( Projection pt, ScreenMapping sm, Clipping cl, FragmentShader<target_t> fs)
     {
-        mt_ = mt;
+        // mt_ = mt;
         pt_ = pt;
         sm_ = sm;
         cl_ = cl;
@@ -70,67 +88,7 @@ public:
     std::vector<Triangle> apply(std::vector<Triangle> triangles);
 };
 
-class Projection
-{
 
-private:
-    float focal;
-    Matrix mt;
-
-public:
-    std::vector<Triangle> project(std::vector<Triangle> triangles)
-    {
-        std::vector<Triangle> new_triangles;
-        // Matrix mt = perspective(-1.0f, 1.0f, 1.0f, -1.0f, 0.1f, 100.0f);
-        for (Triangle t : triangles)
-        {
-            std::vector<Vertex> nv;
-            for (Vertex v : t.get_vertex())
-            {
-                Matrix vc = Matrix(4, 1, {{v.get_x()}, {v.get_y()}, {v.get_z()}, {v.get_w()}});
-                Matrix nc = mt.product(mt, vc);
-                nv.push_back({nc(0, 0), nc(1, 0), nc(2, 0)});
-            }
-            new_triangles.push_back({nv.at(0), nv.at(1), nv.at(2)});
-        }
-        return new_triangles;
-    }
-
-    //perspective(-1.0f,1.0f,1.0f,-1.0f,0.1f,100.0f);
-    Projection(float left, float right, float top, float bottom, float near, float far)
-    {
-        std::vector<std::vector<double>> result(
-            4,
-            std::vector<double>(4, 0));
-        result[0][0] = 2.0f * near / (right - left);
-        result[0][3] = (right + left) / (right - left);
-        result[1][1] = 2.0f * near / (top - bottom);
-        result[1][2] = (top + bottom) / (top - bottom);
-        result[1][3] = -(far + near) / (far - near);
-        result[2][3] = -2.0f * far * near / (far - near);
-        result[2][3] = -1.0f;
-        //result[3][3] = 0.0f;
-        mt = Matrix(4, 4, result);
-    }
-
-    //perspectiv3(π/2, (16.0f/9.0f), 0.1f, 100.0f);
-    void perspectiv3(float fov, float aspect, float near, float far)
-    {
-        focal = 1.0f / tan(fov / 2.0f); //cotan(fov/2)
-        //in teoria dovrebbe essere ((height or width) / 2) * cotan(fov/2)
-        std::vector<std::vector<double>> result(
-            4,
-            std::vector<double>(4, 0));
-        result[0][0] = focal / aspect;
-        result[1][1] = focal;
-        result[2][2] = (far + near) / (near - far);
-        result[3][3] = 2 * far * near / (near - far);
-        result[3][2] = -1.0f;
-        mt = Matrix(4, 4, result);
-    }
-
-
-};
 
 class Normalize
 {
@@ -263,10 +221,10 @@ std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm)
     Vertex c = t.get_c();
 
     // Find the conscribed square around the triangle in cartesian coordinates.
-    max_x = max(max(a.get_x(), b.get_x()), c.get_x());
-    min_x = min(min(a.get_x(), b.get_x()), c.get_x());
-    max_y = max(max(a.get_y(), b.get_y()), c.get_y());
-    min_y = min(min(a.get_y(), b.get_y()), c.get_y());
+    max_x = std::max(std::max(a.get_x(), b.get_x()), c.get_x());
+    min_x = std::min(std::min(a.get_x(), b.get_x()), c.get_x());
+    max_y = std::max(std::max(a.get_y(), b.get_y()), c.get_y());
+    min_y = std::min(std::min(a.get_y(), b.get_y()), c.get_y());
 
     // Convert coordinates to pixel coordinates.
     sm.mapCartesianToScreenPixels(max_x, max_y, &max_x, &max_y);
