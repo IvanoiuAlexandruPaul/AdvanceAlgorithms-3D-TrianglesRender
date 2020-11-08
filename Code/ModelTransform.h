@@ -1,6 +1,7 @@
 #include <vector>
 #include <math.h>
 #include "Triangle.h"
+#include "Matrix.h"
 
 #ifndef MODEL_TRANSFORM_H
 #define MODEL_TRANSFORM_H

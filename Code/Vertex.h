@@ -71,10 +71,6 @@ public:
         return Vertex(x_ + r.get_x(), y_ + r.get_y(), z_ + r.get_z(), w_ + r.get_w());
     }
 
-    /*  Vertex Lerp(Vertex vertexThatHasToBeChoped, double lerpAmt){
-		    return Vertex(vertexThatHasToBeChoped.subtraction(this).multiplication(lerpAmt).addition(this));
-	    }
-        */
 private:
     double x_;
     double y_;
