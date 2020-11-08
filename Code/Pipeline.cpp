@@ -68,15 +68,20 @@ void Pipeline<target_t>::render(std::vector<Triangle> primitives)
     std::list<Fragment> fragments;
     for (Triangle &triangle : primitives)
     {
-        fragments.push_back(rasterizeTriangle(triangle));
+        std::list<Fragment> rasterized = rasterizeTriangle(triangle, sm_);
+        for (Fragment &fragment : rasterized)
+        {
+            // TODO improve.
+            fragments.push_back(fragment);
+        }
     }
 
     fragments = zbuffering(fragments);
     target_t *frame = createEmptyFragmentBuffer(sm_);
 
-    for (int x = 0; x < sm_.get_screenHeight(), ++x)
+    for (int x = 0; x < sm_.get_screenHeight(); ++x)
     {
-        for (int y = 0; y < sm_.get_screenWidth(), ++y)
+        for (int y = 0; y < sm_.get_screenWidth(); ++y)
         {
             for (Fragment &fragment : fragments)
             {
@@ -126,17 +131,17 @@ Fragment::Fragment(int pixel_x, int pixel_y, double z)
     this->z = z;
 }
 
-int Fragment::get_x()
+int Fragment::get_x() const
 {
     return pixel_x;
 }
 
-int Fragment::get_y()
+int Fragment::get_y() const
 {
     return pixel_y;
 }
 
-double Fragment::get_z()
+double Fragment::get_z() const
 {
     return z;
 }
@@ -178,6 +183,8 @@ bool edgeTest(double p_x, double p_y, Vertex a, Vertex b, Vertex c)
     double t_ab = edge(p_x, p_y, a.get_x(), a.get_y(), b.get_x(), b.get_y());
     double t_bc = edge(p_x, p_y, b.get_x(), b.get_y(), c.get_x(), c.get_y());
     double t_ca = edge(p_x, p_y, c.get_x(), c.get_y(), a.get_x(), a.get_y());
+
+    return (t_ab >= 0) && (t_bc >= 0) && (t_ca >= 0);
 }
 
 std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm)
@@ -229,10 +236,28 @@ std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm)
     return fragments;
 }
 
+bool fragmentComparator(const Fragment& a, const Fragment& b)
+{
+    /*
+    if (a.get_x() <= b.get_x())
+    {
+        if (a.get_y() >= b.get_y())
+        {
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+    */
+   return a.get_x() <= b.get_x() && a.get_y() <= b.get_y();
+}
+
 std::list<Fragment> zbuffering(std::list<Fragment> fragments)
 {
 
-    std::sort(fragments.begin(), fragments.end(), fragmentComparator);
+    fragments.sort([](const Fragment& a, const Fragment& b) {
+        return a.get_x() <= b.get_x() && a.get_y() <= b.get_y();
+    });
 
     Fragment tmp = fragments.front();
 

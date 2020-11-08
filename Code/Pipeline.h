@@ -50,11 +50,11 @@ class Fragment
 public:
     Fragment(int pixel_x, int pixel_y, double z);
 
-    int get_x();
+    int get_x() const;
 
-    int get_y();
+    int get_y() const;
 
-    double get_z();
+    double get_z() const;
 
 private:
     int pixel_x;
@@ -101,18 +101,6 @@ bool edgeTest(double p_x, double p_y, Vertex a, Vertex b, Vertex c);
 // Insertion in a list is more efficient rather than vector.
 std::list<Fragment> rasterizeTriangle(Triangle t, ScreenMapping sm);
 
-int fragmentComparator(Fragment a, Fragment b)
-{
-    if (a.get_x() <= b.get_x())
-    {
-        if (a.get_y() >= b.get_y())
-        {
-            return 1;
-        }
-        return 0;
-    }
-    return 0;
-}
 
 std::list<Fragment> zbuffering(std::list<Fragment> fragments);
 

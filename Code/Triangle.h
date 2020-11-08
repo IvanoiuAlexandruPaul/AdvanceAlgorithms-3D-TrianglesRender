@@ -1,3 +1,4 @@
+#include <vector>
 #include "Vertex.h"
 
 #ifndef TRIANGLE_H
