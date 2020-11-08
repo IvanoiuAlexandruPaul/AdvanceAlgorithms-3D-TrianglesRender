@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include <sstream>
 
 Triangle::Triangle(Vertex a, Vertex b, Vertex c) : a(a), b(b), c(c)
 {
@@ -25,4 +26,11 @@ Vertex Triangle::get_c()
 std::vector<Vertex> Triangle::get_vertex() const
 {
     return {this->a, this->b, this->c};
+}
+
+std::string Triangle::str() {
+    std::stringstream ss;
+    ss << "<Triangle: " << a.str() << ", " << b.str() << ", " << c.str() << ", " <<  "|";
+    return ss.str();
+
 }

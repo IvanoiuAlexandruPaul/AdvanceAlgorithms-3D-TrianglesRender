@@ -2,6 +2,7 @@
 #include <list>
 #include <algorithm>
 #include <math.h>
+#include <iostream>
 #include "Triangle.h"
 #include "Clipping.h"
 #include "Matrix.h"
@@ -96,12 +97,26 @@ pt_(pt), sm_(sm), cl_(cl), fs_(fs)
     // fs_ = fs;
 }
 
+void printTriangles(std::vector<Triangle>& primitives) {
+    for (Triangle &triangle : primitives) {
+        std::cout << triangle.get_a().get_x() << std::endl;   
+    }
+}
+
 template <typename target_t>
 void Pipeline<target_t>::render(std::vector<Triangle>& primitives)
 {
+    
     primitives = pt_.project(primitives);
+    std::cout << "After Projection" << std::endl;
+    for (auto& triangle: primitives) {
+        std::cout << triangle.str() << std::endl;
+    }
     primitives = cl_.clip(primitives);
-
+    std::cout << "After Clipping" << std::endl;
+    for (auto& triangle: primitives) {
+        std::cout << triangle.str() << std::endl;
+    }
     std::list<Fragment> fragments;
     for (Triangle &triangle : primitives)
     {

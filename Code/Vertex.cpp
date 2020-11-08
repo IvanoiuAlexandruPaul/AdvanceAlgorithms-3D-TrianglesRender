@@ -1,13 +1,12 @@
 #include "Vertex.h"
-
+#include <sstream>
 Vertex::Vertex()
 {
     Vertex(0, 0, 0, 1);
 }
 
-Vertex::Vertex(double x, double y, double z)
+Vertex::Vertex(double x, double y, double z) : x_(x), y_(y), z_(z), w_(1.0)
 {
-    Vertex(x, y, z, 1);
 }
 
 Vertex::Vertex(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_(w)
@@ -16,6 +15,12 @@ Vertex::Vertex(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_
     this->y_ = y;
     this->z_ = z;
     this->w_ = w; */
+}
+
+std::string Vertex::str() {
+    std::stringstream ss;
+    ss << "[Vertex: " << x_ << ", " << y_ << ", " << z_ << ", " << w_ << "]";
+    return ss.str();
 }
 
 double Vertex::get_x()

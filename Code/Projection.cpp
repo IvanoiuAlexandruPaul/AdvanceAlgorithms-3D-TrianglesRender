@@ -1,18 +1,24 @@
 #include "Projection.h"
 #include <math.h>
 
-Projection::Projection(float left, float right, float top, float bottom, float near, float far)
+Projection::Projection(float left, float right, float top, float bottom, float near, float far) 
+: mt(4, 4, {
+    {2.0 * near / (right - left), 0, -(right + left) / (right - left), 0},
+    {0, 2.0 * near / (bottom-top), -(bottom + top) / (bottom-top), 0},
+    {0, 0, (far+near) / (far-near), (-2.0 * far * near) / (far - near)},
+    {0, 0, 1.0, 0}
+})
 {
-    std::vector<std::vector<double>> result(4, std::vector<double>(4, 0));
-    result[0][0] = 2.0f * near / (right - left);
-    result[0][3] = (right + left) / (right - left);
-    result[1][1] = 2.0f * near / (top - bottom);
-    result[1][2] = (top + bottom) / (top - bottom);
-    result[1][3] = -(far + near) / (far - near);
-    result[2][3] = -2.0f * far * near / (far - near);
-    result[2][3] = -1.0f;
-    //result[3][3] = 0.0f;
-    mt = Matrix(4, 4, result);
+    // std::vector<std::vector<double>> result(4, std::vector<double>(4, 0));
+    // result[0][0] = 2.0f * near / (right - left);
+    // result[0][3] = (right + left) / (right - left);
+    // result[1][1] = 2.0f * near / (top - bottom);
+    // result[1][2] = (top + bottom) / (top - bottom);
+    // result[1][3] = -(far + near) / (far - near);
+    // result[2][3] = -2.0f * far * near / (far - near);
+    // result[3][3] = -1.0f;
+    // //result[3][3] = 0.0f;
+    // mt = Matrix(4, 4, result);
 }
 
 // Constructor for trigonometric

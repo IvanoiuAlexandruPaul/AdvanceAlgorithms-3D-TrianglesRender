@@ -48,9 +48,9 @@ void Clipping::aux(std::vector<Vertex>& vertices, int component_Index, std::vect
 		if (currentInside ^ previousInside) // se il nostro current è dentro e il previous non lo è   o viceversa
 		{
 			// L = (1-B)/(1-B)-(1-C)
-			double lerpAmt = (previousVertex.get_w() - previousComponent) /
-							 ((previousVertex.get_w() - previousComponent) -
-							  (currentVertex.get_w() - currentComponent));
+			double lerpAmt =  (currentVertex.get_w() - currentComponent) /
+							 ((currentVertex.get_w() - currentComponent) -
+							  (previousVertex.get_w() - previousComponent));
 
 			//This is the vertex that you will find inside the screen not ouside
 			result_vertices.push_back(lerp(currentVertex, previousVertex, lerpAmt));

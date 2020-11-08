@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 #include "Vertex.h"
 
 #ifndef TRIANGLE_H
@@ -18,6 +19,8 @@ public:
     Vertex get_c();
 
     std::vector<Vertex> get_vertex() const;
+
+    std::string str();
 
 private:
     Vertex a;

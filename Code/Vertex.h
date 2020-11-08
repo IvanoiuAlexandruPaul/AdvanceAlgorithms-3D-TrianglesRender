@@ -1,3 +1,6 @@
+#include <string>
+
+
 #ifndef VERTEX_H
 #define VERTEX_H
 class Vertex
@@ -22,6 +25,8 @@ public:
     Vertex operator-(Vertex r);
 
     Vertex operator+(Vertex r);
+
+    std::string str();
 
 private:
     double x_;

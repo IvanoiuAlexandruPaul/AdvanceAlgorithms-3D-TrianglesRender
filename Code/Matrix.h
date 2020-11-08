@@ -17,6 +17,8 @@ public:
 
     double operator[](int i); // TODO valutare se toglierlo.
 
+    std::string str();
+
 private:
     int cols_;
     int rows_;
