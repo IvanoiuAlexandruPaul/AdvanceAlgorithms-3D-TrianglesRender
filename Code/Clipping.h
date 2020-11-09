@@ -12,7 +12,7 @@ class Clipping
 public:
 	Clipping() {}
 
-	std::vector<Triangle> clip(std::vector<Triangle>& triangles);
+	std::list<Triangle> clip(std::vector<Triangle>& triangles);
 	void aux(std::vector<Vertex>& vertices, int component_Index, std::vector<Vertex>& new_triangles, std::vector<Triangle>& finalListOfTriangles);
 	void buildTriangles(std::vector<Vertex>& listOfTheVertices, std::vector<Triangle>& finalListOfTriangles);
 };

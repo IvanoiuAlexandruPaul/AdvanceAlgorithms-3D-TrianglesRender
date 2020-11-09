@@ -112,13 +112,13 @@ void Pipeline<target_t>::render(std::vector<Triangle>& primitives)
     for (auto& triangle: primitives) {
         std::cout << triangle.str() << std::endl;
     }
-    primitives = cl_.clip(primitives);
+    std::list<Triangle> clippedPrimitives = cl_.clip(primitives);
     std::cout << "After Clipping" << std::endl;
-    for (auto& triangle: primitives) {
+    for (auto& triangle: clippedPrimitives) {
         std::cout << triangle.str() << std::endl;
     }
     std::list<Fragment> fragments;
-    for (Triangle &triangle : primitives)
+    for (Triangle &triangle : clippedPrimitives)
     {
         std::list<Fragment> rasterized = rasterizeTriangle(triangle, sm_);
         for (Fragment &fragment : rasterized)
