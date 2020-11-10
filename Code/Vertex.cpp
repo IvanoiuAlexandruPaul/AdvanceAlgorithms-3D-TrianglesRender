@@ -1,16 +1,14 @@
 #include "Vertex.h"
 #include <sstream>
-Vertex::Vertex()
-{
+
+Vertex::Vertex() {
     Vertex(0, 0, 0, 1);
 }
 
-Vertex::Vertex(double x, double y, double z) : x_(x), y_(y), z_(z), w_(1.0)
-{
+Vertex::Vertex(double x, double y, double z) : x_(x), y_(y), z_(z), w_(1.0) {
 }
 
-Vertex::Vertex(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_(w)
-{
+Vertex::Vertex(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_(w) {
     /* this->x_ = x;
     this->y_ = y;
     this->z_ = z;
@@ -23,66 +21,63 @@ std::string Vertex::str() {
     return ss.str();
 }
 
-double Vertex::get_x()
-{
+double Vertex::get_x() {
     return this->x_;
 }
 
-double Vertex::get_y()
-{
+double Vertex::get_y() {
     return this->y_;
 }
 
-double Vertex::get_z()
-{
+double Vertex::get_z() {
     return this->z_;
 }
 
-double Vertex::get_w()
-{
+double Vertex::get_w() {
     return this->w_;
 }
 
-double Vertex::operator[](int index)
-{
-    switch (index)
-    {
-    case 0:
-        return get_x();
-    case 1:
-        return get_y();
-    case 2:
-        return get_z();
-    case 3:
-        return get_w();
-    default:
-        break;
+double Vertex::operator[](int index) {
+    switch (index) {
+        case 0:
+            return get_x();
+        case 1:
+            return get_y();
+        case 2:
+            return get_z();
+        case 3:
+            return get_w();
+        default:
+            break;
     }
     return -100.0;
 }
 
-Vertex Vertex::operator*(double r)
-{
+Vertex Vertex::operator*(double r) {
     return Vertex(x_ * r, y_ * r, z_ * r, w_ * r);
 }
 
-Vertex Vertex::operator-(Vertex r)
-{
+Vertex Vertex::operator-(Vertex r) {
     return Vertex(x_ - r.get_x(), y_ - r.get_y(), z_ - r.get_z(), w_ - r.get_w());
 }
 
-Vertex Vertex::operator+(Vertex r)
-{
+Vertex Vertex::operator+(Vertex r) {
     return Vertex(x_ + r.get_x(), y_ + r.get_y(), z_ + r.get_z(), w_ + r.get_w());
 }
 
-Vertex lerp(Vertex a, Vertex b, double lerpAmt)
-{
+Vertex Vertex::operator/(double d) {
+    return {x_ / d, y_ / d, z_ / d, w_ / d};
+}
+
+bool Vertex::operator==(Vertex v) const {
+    return v.x_ == x_ && v.y_ == y_ && v.z_ == z_ && v.w_ == w_;
+}
+
+Vertex lerp(Vertex a, Vertex b, double lerpAmt) {
     return ((b - a) * lerpAmt) + b;
 }
 
-Vertex planePassingPoints(Vertex a, Vertex b, Vertex c)
-{
+Vertex planePassingPoints(Vertex a, Vertex b, Vertex c) {
     double x_p, y_p, z_p, w_p;
 
     // Calculate segment AB

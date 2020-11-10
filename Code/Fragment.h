@@ -12,7 +12,6 @@ public:
 
     double get_z() const;
 
-private:
     int pixel_x;
     int pixel_y;
     double z;

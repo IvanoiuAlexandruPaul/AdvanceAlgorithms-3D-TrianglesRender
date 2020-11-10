@@ -11,6 +11,7 @@ public:
     Matrix();
     Matrix(int rows, int cols, std::vector<std::vector<double>> mat);
     Matrix operator* (Matrix);
+    Vertex operator* (Vertex);
     Matrix operator+ (Matrix);
 
     double operator()(int row, int col);

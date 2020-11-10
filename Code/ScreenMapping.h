@@ -9,17 +9,14 @@ class ScreenMapping
 public:
     ScreenMapping(int screenWidth, int screenHeight);
 
-    void mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY);
+    void mapScreenPixelsToCartesian(int pixelX, int pixelY, double *cartX, double *cartY);
 
-    void mapCartesianToScreenPixels(double x, double y, double *pixelRow, double *pixelCol);
+    void mapCartesianToScreenPixels(double cartX, double cartY, double *pixelX, double *pixelY);
 
-    int get_screenWidth();
-
-    int get_screenHeight();
-
-private:
     int screenWidth;
     int screenHeight;
+
+
 };
 
 #endif

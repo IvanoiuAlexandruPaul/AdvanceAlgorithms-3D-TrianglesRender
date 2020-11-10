@@ -7,24 +7,26 @@ ScreenMapping::ScreenMapping(int screenWidth, int screenHeight) : screenHeight(s
     this->screenWidth = screenWidth; */
 }
 
-void ScreenMapping::mapScreenPixelsToCartesian(int screenx, int screeny, double *coordinateX, double *coordinateY)
-{
-    *coordinateX = screenx - screenWidth / 2;
-    *coordinateY = -screeny + screenHeight / 2;
+double screenToCartesian(int screenCord, int screenDim) {
+    return double(2 * screenCord) / double(screenDim - 1) - 1;
 }
 
-void ScreenMapping::mapCartesianToScreenPixels(double x, double y, double *pixelRow, double *pixelCol)
-{
-    *pixelRow = floor((screenWidth / 2) + x);
-    *pixelCol = floor((screenHeight / 2) - y);
+double cartesianToScreen(double cartCord, int screenDim) {
+    return ((cartCord + 1) * double(screenDim - 1)) / 2.0;
 }
 
-int ScreenMapping::get_screenWidth()
+void ScreenMapping::mapScreenPixelsToCartesian(int pixelX, int pixelY, double *cartX, double *cartY)
 {
-    return screenWidth;
+//    *cartX = (2 * pixelX / double(screenWidth - 1));
+//    *cartY = (2 * pixelY / double(screenHeight - 1));
+    *cartX = screenToCartesian(pixelX, screenWidth);
+    *cartY = screenToCartesian(pixelY, screenHeight);
 }
 
-int ScreenMapping::get_screenHeight()
+void ScreenMapping::mapCartesianToScreenPixels(double cartX, double cartY, double *pixelX, double *pixelY)
 {
-    return screenHeight;
+//    *pixelX = floor(cartX * (screenWidth - 1) / 2.0);
+//    *pixelY = floor(cartY * (screenHeight - 1) / 2.0);
+    *pixelX = floor(cartesianToScreen(cartX, screenWidth));
+    *pixelY = floor(cartesianToScreen(cartY, screenHeight));
 }

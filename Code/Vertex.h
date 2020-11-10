@@ -26,6 +26,10 @@ public:
 
     Vertex operator+(Vertex r);
 
+    Vertex operator/(double d);
+
+    bool operator==(Vertex) const;
+
     std::string str();
 
 private:
