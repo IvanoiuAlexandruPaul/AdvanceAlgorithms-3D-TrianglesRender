@@ -61,7 +61,7 @@ int main() {
     Vertex v1(1, -1, 1.5);
     Vertex v2(1, 1, 1.1);
     Vertex v3(-1, 1, 1.5);
-    Vertex v4(-1, -50, 1.9);
+    Vertex v4(-1, -1, 1.9);
 
 
     // creare triangoli

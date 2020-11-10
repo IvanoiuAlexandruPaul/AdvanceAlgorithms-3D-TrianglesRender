@@ -1,5 +1,6 @@
 #include "Vertex.h"
 #include <sstream>
+#include <math.h>
 
 Vertex::Vertex() {
     Vertex(0, 0, 0, 1);
@@ -71,6 +72,21 @@ Vertex Vertex::operator/(double d) {
 
 bool Vertex::operator==(Vertex v) const {
     return v.x_ == x_ && v.y_ == y_ && v.z_ == z_ && v.w_ == w_;
+}
+
+Vertex::Vertex(const Vertex &v) : x_(v.x_), y_(v.y_), z_(v.z_), w_(v.w_) {
+}
+
+double Vertex::operator*(const Vertex& v) const {
+    return x_ * v.x_ + y_ * v.y_ + z_ * v.z_ + w_ * v.w_;
+}
+
+double Vertex::norm() const {
+    return sqrt( x_ * x_ + y_ * y_ + z_ * z_ + w_ * w_);
+}
+
+double angle(const Vertex& v1, const Vertex& v2) {
+    return acos( (v1 * v2) / (v1.norm() * v2.norm()) );
 }
 
 Vertex lerp(Vertex a, Vertex b, double lerpAmt) {
